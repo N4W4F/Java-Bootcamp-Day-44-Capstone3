@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Ebtehal - HeavyEquipment Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/heavy-equipments")
+@RequestMapping("/api/v1/heavy-equipment")
 public class HeavyEquipmentController {
     private final HeavyEquipmentService heavyEquipmentService;
 
@@ -40,18 +41,17 @@ public class HeavyEquipmentController {
         return ResponseEntity.status(200).body(new ApiResponse("Heavy Equipment with ID: " + heavyEquipmentId + " has been deleted successfully"));
     }
 
-
+/// reemas
 @PutMapping("/changStatus/{heavyEquipmentId}/{rentalId}")
     public ResponseEntity changStatusForTheHeavyE(@PathVariable Integer heavyEquipmentId, @PathVariable Integer rentalId){
        heavyEquipmentService.changStatusForTheHeavyEquipment(heavyEquipmentId, rentalId);
        return ResponseEntity.status(200).body(new ApiResponse("Done Change the status for the Heavy Equipment"));
     }
 
-
+    /// reemas
     @GetMapping("/getHeavyEquipmentByStatus/{supplier_id}/{status}")
 public ResponseEntity getHeavyEquipmentByStatus(@PathVariable Integer supplier_id,@PathVariable String status ){
     List<HeavyEquipment> heavyEquipments =heavyEquipmentService.getHeavyEquipmentByStatus(supplier_id, status);
-
     return ResponseEntity.status(200).body(heavyEquipments);
 }
 }

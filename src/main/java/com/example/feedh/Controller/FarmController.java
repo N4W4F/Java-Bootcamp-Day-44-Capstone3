@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Nawaf - Farm Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/farms")
+@RequestMapping("/api/v1/farm")
 public class FarmController {
     private final FarmService farmService;
 
@@ -39,7 +40,7 @@ public class FarmController {
         return ResponseEntity.status(200).body(new ApiResponse("Farm with ID: " + farmId + " has been deleted successfully"));
     }
 
-
+/// reemas
 @GetMapping("/FarmByLocation/{customerId}/{farmId}/{location}")
     public ResponseEntity getFarmByLocation(@PathVariable Integer customerId,@PathVariable Integer farmId ,@PathVariable String location){
         List<Farm>farms=farmService.getFarmByLocation(customerId, farmId, location);

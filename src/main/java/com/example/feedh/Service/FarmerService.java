@@ -60,7 +60,6 @@ public class FarmerService {
                 farmType.equals("Mixed");
     }
 
-
     public void updateFarmer(Integer farmerId, Farmer farmer) {
         Farmer oldFarmer = farmerRepository.findFarmerById(farmerId);
         if (oldFarmer == null) {
@@ -82,5 +81,44 @@ public class FarmerService {
             throw new ApiException("Farmer can not delete");
         }
         farmerRepository.delete(farmer);
+    }
+
+    public void transferFarmer(Integer farmerId, Integer farm1Id, Integer farm2Id, Integer customerId) {
+        Farm farm1 = farmRepository.findFarmById(farm1Id);
+        if (farm1 == null) {
+            throw new ApiException("Farm 1 not found");
+        }
+
+        Farm farm2 = farmRepository.findFarmById(farm2Id);
+        if (farm2 == null) {
+            throw new ApiException("Farm 2 not found");
+        }
+
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null || !(customer.getFarms().contains(farm1) && customer.getFarms().contains(farm2))) {
+            throw new ApiException("You must be the owner of both farms");
+        }
+
+
+        Farmer farmer = farmerRepository.findFarmerById(farmerId);
+        if (farmer == null) {
+            throw new ApiException("Farmer not found");
+        }
+
+        if (!farmer.getFarm().equals(farm1)) {
+            throw new ApiException("Farmer is not assigned to farm 1");
+        }
+
+        if (farm1.equals(farm2)) {
+            throw new ApiException("Cannot transfer farmer to the same farm");
+        }
+        farm2.getFarmers().add(farmer);
+        farm1.getFarmers().remove(farmer);
+        farmRepository.save(farm1);
+        farmRepository.save(farm2);
+
+        farmer.setFarm(farm2);
+        farmerRepository.save(farmer);
+        System.out.println("Successfully transferred farmer " + farmerId + " from farm " + farm1Id + " to farm " + farm2Id);
     }
 }

@@ -9,6 +9,5 @@ import java.util.Optional;
 @Repository
 public interface PlantRepository extends JpaRepository<Plant, Integer> {
     Plant findPlantById(Integer Id);
-
-//    Optional<Plant> findByFarm_IdAndPlantId(Integer farmId, Integer plantId);
+    Optional<Plant> findByFarm_IdAndType(Integer farmId, String type);
 }

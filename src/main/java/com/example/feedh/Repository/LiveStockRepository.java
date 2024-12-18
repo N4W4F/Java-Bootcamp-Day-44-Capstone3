@@ -21,8 +21,6 @@ public interface LiveStockRepository extends JpaRepository<LiveStock, Integer> {
 
     List<LiveStock> findLiveStockByQuantityLessThanEqual(Integer quantity);
 
-
     @Query("select ls from LiveStock ls where ls.breed=?1 and ls.type=?2")
     List<LiveStock> getLiveStockByBreedAndType(String breed ,String type);
-
 }

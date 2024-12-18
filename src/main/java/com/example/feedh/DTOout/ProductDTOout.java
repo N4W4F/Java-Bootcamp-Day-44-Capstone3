@@ -13,4 +13,8 @@ public class ProductDTOout {
     private String description;
     private Double price;
     private Integer quantity;
+
+    public ProductDTOout(){
+
+    }
 }

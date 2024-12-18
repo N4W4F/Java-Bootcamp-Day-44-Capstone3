@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.List;
 
+// Reemas - Customer DTO
 @Getter
 @Setter
 @AllArgsConstructor

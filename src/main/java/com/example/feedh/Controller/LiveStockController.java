@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+// Ebtehal - LiveStock Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/live-stocks")
+@RequestMapping("/api/v1/live-stock")
 public class LiveStockController {
     private final LiveStockService liveStockService;
     // CRUD - Start
@@ -68,12 +69,13 @@ public class LiveStockController {
     }
 
     // Services
+    /// reemas
     @GetMapping("/get/feed-suggestions/{type}")
    public ResponseEntity<Map<String, List<String>>> getFeedSuggestions(@PathVariable String type) {
         Map<String, List<String>> feedSuggestions = liveStockService.getFeedSuggestions(type);
        return ResponseEntity.status(200).body(feedSuggestions);
     }
-
+    /// reemas
     @GetMapping("/get-LiveStock-BY-BreedAndType/{breed}/{type}")
     public ResponseEntity getLiveStockByBreedAndType(@PathVariable String breed,@PathVariable String type ){
         return ResponseEntity.status(200).body(liveStockService.getLiveStockByBreedAndType(breed, type));

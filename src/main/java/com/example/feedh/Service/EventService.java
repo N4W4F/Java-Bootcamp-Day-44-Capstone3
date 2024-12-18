@@ -15,12 +15,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+// Nawaf - Event Service
 @Service
 @RequiredArgsConstructor
 public class EventService {
     private final EventRepository eventRepository;
     private final AdminRepository adminRepository;
     private final CustomerRepository customerRepository;
+    private final EmailService emailService;
     // CRUD - Start
     public List<EventDTOout> getAllEvents() {
         List<Event> events = eventRepository.findAll();
@@ -35,13 +37,18 @@ public class EventService {
     public void addEvent(Integer adminId, Event event) {
         Admin admin = adminRepository.findAdminById(adminId);
         if (admin == null) {
-            throw new ApiException("Admin with ID: " + adminId + " was not found");
+            throw new ApiException("You don't have the permission to add a new event");
         }
         event.setAdmin(admin);
         eventRepository.save(event);
+        notifyCustomersAboutEvent(event);
     }
 
-    public void updateEvent(Integer eventId, Event event) {
+    public void updateEvent(Integer eventId, Integer adminId, Event event) {
+        Admin admin = adminRepository.findAdminById(adminId);
+        if (admin == null) {
+            throw new ApiException("You don't have the permission to update an event");
+        }
         Event oldEvent = eventRepository.findEventById(eventId);
         if (oldEvent == null) {
             throw new ApiException("Event with ID: " + eventId + " was not found");
@@ -65,9 +72,7 @@ public class EventService {
     }
     // CRUD - End
 
-    // ************
-    // end poind get event
-
+    // Services
     public List<Event> getEventByDate(LocalDateTime start, LocalDateTime end){
         if (start.isAfter(end)){
             throw new ApiException("start date must be before end date");
@@ -91,4 +96,40 @@ public class EventService {
 
     }
 
+    public List<Event>findEventByStatusAndLocation(String status,String location ){
+       List<Event>eventList=eventRepository.findEventByStatusAndLocation(status, location) ;
+       if(eventList.isEmpty()){
+           throw  new ApiException("Sorry look like there’s no event like this details");
+       }
+       return  eventList;
+    }
+
+    private void notifyCustomersAboutEvent(Event event) {
+        List<Customer> customers = customerRepository.findAll();
+
+        String subject = "New Event Added: " + event.getName();
+        String body = String.format(
+                "Dear Customer,\n\n" +
+                        "We are excited to announce a new event: '%s'.\n\n" +
+                        "Event Details:\n" +
+                        "- Description: %s\n" +
+                        "- Location: %s\n" +
+                        "- Start Date: %s\n" +
+                        "- End Date: %s\n\n" +
+                        "We look forward to your participation. For more details, please contact us.\n\n" +
+                        "Best regards,\n" +
+                        "Your Farm Management Team",
+                event.getName(),
+                event.getDescription(),
+                event.getLocation(),
+                event.getStartDateTime().toString(),
+                event.getEndDateTime().toString()
+        );
+
+        for (Customer customer : customers) {
+            if (customer.getEmail() != null) {
+                emailService.sendEmail(customer.getEmail(), subject, body);
+            }
+        }
+    }
 }

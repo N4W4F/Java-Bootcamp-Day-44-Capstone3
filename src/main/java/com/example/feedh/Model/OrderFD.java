@@ -25,7 +25,6 @@ public class OrderFD {
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     @NotNull(message = "Order Date cannot be empty")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    @FutureOrPresent(message = "Order Date must be in present or future")
     private LocalDateTime orderDateTime=LocalDateTime.now();
 
     @Column(columnDefinition = "INT NOT NULL")

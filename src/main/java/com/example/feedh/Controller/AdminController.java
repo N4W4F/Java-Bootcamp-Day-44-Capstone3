@@ -8,12 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Nawaf - Admin Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admins")
+@RequestMapping("/api/v1/admin")
 public class AdminController {
 private final AdminService adminService;
-
+    // CRUD - Start
     @GetMapping("/get")
     public ResponseEntity getAllAdmins(){
         return ResponseEntity.status(200).body(adminService.getAllAdmin());
@@ -36,16 +37,26 @@ private final AdminService adminService;
         adminService.deleteAdmin(adminId);
         return ResponseEntity.status(200).body(new ApiResponse("Admin with ID: " + adminId + " has been deleted successfully"));
     }
+    // CRUD - End
 
-    @PutMapping("/approve/{eventId}/{adminId}")
-    public ResponseEntity approveParticipation(@PathVariable Integer eventId, @PathVariable Integer adminId) {
-        adminService.approveParticipation(eventId, adminId);
+    //Services
+    // Ebtehal - Endpoint lets the admin to accept an event participant
+    @PutMapping("/approve/{eventParticipantId}/{adminId}")
+    public ResponseEntity approveParticipation(@PathVariable Integer eventParticipantId, @PathVariable Integer adminId) {
+        adminService.approveParticipation(eventParticipantId, adminId);
         return ResponseEntity.status(200).body(new ApiResponse("Participation approved successfully"));
     }
 
-    @PutMapping("/reject/{eventId}/{adminId}")
-    public ResponseEntity rejectParticipation(@PathVariable Integer eventId, @PathVariable Integer adminId) {
-        adminService.rejectParticipation(eventId, adminId);
+    // Ebtehal - Endpoint lets the admin to reject an event participant
+    @PutMapping("/reject/{eventParticipantId}/{adminId}")
+    public ResponseEntity rejectParticipation(@PathVariable Integer eventParticipantId, @PathVariable Integer adminId) {
+        adminService.rejectParticipation(eventParticipantId, adminId);
         return ResponseEntity.status(200).body(new ApiResponse("Participation rejected successfully"));
+    }
+    
+    // Nawaf - Reemas: Endpoint returns a list of event participants by their status to the admin
+    @GetMapping("/get/by-status/{adminId}/{status}")
+    public ResponseEntity getParticipantsByStatus(@PathVariable Integer adminId, @PathVariable String status) {
+        return ResponseEntity.status(200).body(adminService.getParticipantsByStatus(adminId, status));
     }
 }

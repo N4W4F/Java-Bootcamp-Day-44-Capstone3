@@ -11,5 +11,4 @@ public interface FarmRepository extends JpaRepository<Farm, Integer> {
     Farm findFarmById(Integer id);
 
     List<Farm> findFarmByLocation(String location);
-
 }

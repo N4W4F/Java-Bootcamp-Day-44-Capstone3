@@ -1,17 +1,21 @@
 package com.example.feedh.Service;
 
 import com.example.feedh.ApiResponse.ApiException;
+import com.example.feedh.DTOout.DTOoutSUP;
 import com.example.feedh.DTOout.HeavyEquipmentDTOout;
 import com.example.feedh.DTOout.ProductDTOout;
 import com.example.feedh.DTOout.SupplierDTOout;
-import com.example.feedh.Model.HeavyEquipment;
-import com.example.feedh.Model.Product;
-import com.example.feedh.Model.Supplier;
+import com.example.feedh.Model.*;
+import com.example.feedh.Repository.CustomerRepository;
 import com.example.feedh.Repository.ProductRepository;
+import com.example.feedh.Repository.RentalRepository;
 import com.example.feedh.Repository.SupplierRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +23,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SupplierService {
     private final SupplierRepository supplierRepository;
-    private  final ProductRepository productRepository;
-
+    private final RentalRepository rentalRepository;
+    private final JavaMailSender mailSender;
+   private final CustomerRepository customerRepository;
     // CRUD - Start
     public List<SupplierDTOout> getAllSuppliers() {
         List<Supplier> suppliers = supplierRepository.findAll();
@@ -76,21 +81,88 @@ public class SupplierService {
 
     // Getters
 
-public List<Supplier>getSupplierByAddress(String address){
-        List<Supplier>suppliers=supplierRepository.findSupplierByAddress(address);
-        if (suppliers==null){
-            throw new ApiException("there is no suppliers in that address");
+    //Eb
+    public List<Supplier>getSupplierByAddress(String address){
+            List<Supplier>suppliers=supplierRepository.findSupplierByAddress(address);
+            if (suppliers==null){
+                throw new ApiException("there is no suppliers in that address");
+            }
+        return suppliers;
+    }
+
+    //eb
+        public List<Rental> getRentalsNearExpiration() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime nearEndDate = today.plusDays(3);
+
+        List<Rental> rentalsNearExpiration = rentalRepository.findByEndDateTimeBetween(today, nearEndDate);
+
+        for (Rental rental : rentalsNearExpiration) {
+            if (rental.getCustomer() != null && rental.getCustomer().getEmail() != null) {
+                sendEmailNotification(rental.getCustomer().getEmail(), rental);
+            }
         }
-   return suppliers;
-}
-    
-    
-    
+
+        return rentalsNearExpiration;
+    }
+
+//eb
+//     إرسال بريد إلكتروني للعميل
+    private void sendEmailNotification(String email, Rental rental) {
+        String subject = "Rental Contract Expiration Notice";
+        String message = "Dear Customer,\n\n"
+                + "This is a reminder that your rental contract (ID: " + rental.getId() + ") "
+                + "for the heavy equipment will expire on " + rental.getEndDateTime() + ".\n"
+                + "Please contact us if you need to renew or extend your contract.\n\n"
+                + "Thank you,\nYour Farm Management Team";
+
+        // إنشاء وإرسال الرسالة
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+
+        mailSender.send(mailMessage);
+    }
+
     // Services
 
     // compare between supplier
 
+    //Ebtehal
 
+    // get Supplier by ProductPrice
+    public List<DTOoutSUP> getSuppliersByProductPrice(Double price) {
+        List<Supplier> suppliers = supplierRepository.findSuppliersByProductPrice(price);
+        List<DTOoutSUP> dtoList = new ArrayList<>();
+        for (Supplier supplier : suppliers) {
+            DTOoutSUP dto = new DTOoutSUP(
+                    supplier.getName(),
+                    supplier.getEmail(),
+                    supplier.getPhoneNumber(),
+                    supplier.getAddress()
+            );
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
+    // get Supplier by heavyEquepment Price
+    //Ebtehal
+    public List<DTOoutSUP> getSuppliersByHeavyEquipmentRentPrice(Double price) {
+        List<Supplier> suppliers = supplierRepository.findSuppliersByHeavyEquipmentRentPrice(price);
+        List<DTOoutSUP> dtoList = new ArrayList<>();
+        for (Supplier supplier : suppliers) {
+            DTOoutSUP dto = new DTOoutSUP(
+                    supplier.getName(),
+                    supplier.getEmail(),
+                    supplier.getPhoneNumber(),
+                    supplier.getAddress()
+            );
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
 
 
 

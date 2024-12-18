@@ -8,9 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Nawaf - Farmer Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/farmers")
+@RequestMapping("/api/v1/farmer")
 public class FarmerController {
     private final FarmerService farmerService;
 
@@ -35,5 +36,15 @@ public class FarmerController {
     public ResponseEntity deleteFarmer(@PathVariable Integer ownerId,@PathVariable Integer farmerId) {
         farmerService.deleteFarmer(ownerId,farmerId);
         return ResponseEntity.status(200).body(new ApiResponse("Farmer with ID: " + farmerId + " has been deleted successfully"));
+    }
+
+    @PutMapping("/transfer-farmer/{farmerId}/{farm1Id}/{farm2Id}/{customerId}")
+    public ResponseEntity<String> transferFarmer(
+            @PathVariable Integer farmerId,
+            @PathVariable Integer farm1Id,
+            @PathVariable Integer farm2Id,
+            @PathVariable Integer customerId) {
+        farmerService.transferFarmer(farmerId, farm1Id, farm2Id, customerId);
+        return ResponseEntity.status(200).body("Farmer " + farmerId + " successfully transferred from farm " + farm1Id + " to farm " + farm2Id);
     }
 }

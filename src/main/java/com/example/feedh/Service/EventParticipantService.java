@@ -3,6 +3,7 @@ package com.example.feedh.Service;
 import com.example.feedh.ApiResponse.ApiException;
 import com.example.feedh.DTOout.*;
 import com.example.feedh.Model.*;
+import com.example.feedh.Repository.AdminRepository;
 import com.example.feedh.Repository.CustomerRepository;
 import com.example.feedh.Repository.EventParticipantRepository;
 import com.example.feedh.Repository.EventRepository;
@@ -18,6 +19,8 @@ public class EventParticipantService {
     private final EventParticipantRepository eventParticipantRepository;
     private final EventRepository eventRepository;
     private final CustomerRepository customerRepository;
+    private final AdminRepository adminRepository;
+
     // CRUD - Start
     public List<EventParticipantDTOout> getAllEventParticipants() {
         List<EventParticipant> participants = eventParticipantRepository.findAll();
@@ -81,7 +84,12 @@ public class EventParticipantService {
         oldEventParticipant.setStatus(eventParticipant.getStatus());
     }
 
-    public void deleteEventParticipant(Integer eventParticipantId) {
+    public void deleteEventParticipant(Integer adminId, Integer eventParticipantId) {
+        Admin admin = adminRepository.findAdminById(adminId);
+        if (admin == null) {
+            throw new ApiException("You don't have permission to delete an event participant");
+        }
+
         EventParticipant eventParticipant = eventParticipantRepository.findEventParticipantById(eventParticipantId);
         if (eventParticipant == null) {
             throw new ApiException("Event Participant with ID: " + eventParticipantId + " was not found");

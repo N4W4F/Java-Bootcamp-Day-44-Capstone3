@@ -3,14 +3,12 @@ package com.example.feedh.DTOout;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
-
-// Nawaf - Admin DTO
 @Data
 @AllArgsConstructor
-public class AdminDTOout {
+///  that supplier DTO is for compare between supplier by there price
+public class DTOoutSUP {
     private String name;
     private String email;
     private String phoneNumber;
-    private List<EventDTOout> eventDTOouts;
+    private String address;
 }

@@ -5,11 +5,11 @@ import com.example.feedh.ApiResponse.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.UnexpectedTypeException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -22,8 +22,22 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
+// Reemas - Controller Advice
 @org.springframework.web.bind.annotation.ControllerAdvice
 public class ControllerAdvice {
+
+    @ExceptionHandler(value = MailAuthenticationException.class)
+    public ResponseEntity<ApiResponse> MailAuthenticationException(MailAuthenticationException e) {
+        String msg = e.getMessage();
+        return ResponseEntity.status(400).body(new ApiResponse(msg));
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse> IllegalArgumentException(IllegalArgumentException e) {
+        String msg = e.getMessage();
+        return ResponseEntity.status(400).body(new ApiResponse(msg));
+    }
+
     @ExceptionHandler(value = NullPointerException.class)
     public ResponseEntity<ApiResponse> NullPointerException(NullPointerException e) {
         String msg = e.getMessage();

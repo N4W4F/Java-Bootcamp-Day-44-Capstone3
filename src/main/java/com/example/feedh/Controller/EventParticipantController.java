@@ -8,12 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Nawaf - EventParticipant Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/event-participants")
+@RequestMapping("/api/v1/event-participant")
 public class EventParticipantController {
     private final EventParticipantService eventParticipantService;
-
+    // CRUD -
     @GetMapping("/get")
     public ResponseEntity getAllEventParticipants() {
         return ResponseEntity.status(200).body(eventParticipantService.getAllEventParticipants());
@@ -25,15 +26,15 @@ public class EventParticipantController {
         return ResponseEntity.status(200).body(new ApiResponse("Event Participant has been added to event: " + eventId + " successfully"));
     }
 
-    @PutMapping("/update/{eventParticipantId}")
+    @PutMapping("/update/{adminId}/{eventParticipantId}")
     public ResponseEntity updateEventParticipant(@PathVariable Integer eventParticipantId, @RequestBody @Valid EventParticipant eventParticipant) {
         eventParticipantService.updateEventParticipant(eventParticipantId, eventParticipant);
         return ResponseEntity.status(200).body(new ApiResponse("Event Participant with ID: " + eventParticipantId + " has been updated successfully"));
     }
 
-    @DeleteMapping("/delete/{eventParticipantId}")
-    public ResponseEntity deleteEventParticipant(@PathVariable Integer eventParticipantId) {
-        eventParticipantService.deleteEventParticipant(eventParticipantId);
+    @DeleteMapping("/delete/{adminId}/{eventParticipantId}")
+    public ResponseEntity deleteEventParticipant(@PathVariable Integer adminId, @PathVariable Integer eventParticipantId) {
+        eventParticipantService.deleteEventParticipant(adminId, eventParticipantId);
         return ResponseEntity.status(200).body(new ApiResponse("Event with ID: " + eventParticipantId + " has been deleted successfully"));
     }
 }

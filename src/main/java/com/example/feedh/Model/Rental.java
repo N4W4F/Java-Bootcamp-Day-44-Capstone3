@@ -32,12 +32,11 @@ public class Rental {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private LocalDateTime endDateTime;
 
-  @Column(columnDefinition = "DECIMAL NOT NULL")
-  @Positive(message = "Rental Price must be positive number")
+  @Column(columnDefinition = "double")
+  //@Positive(message = "Rental Price must be positive number")
   private Double price;
 
   @Column(columnDefinition = "VARCHAR(50) DEFAULT ('Active')")
-  @NotEmpty(message = "Rental Status cannot be empty")
   @Size(min = 1, max = 50, message = "Rental Status must be between 1 and 50 characters")
   @Pattern(regexp = "^(Active|Cancelled|Completed)$",
           message = "Rental Status must be either 'Active', 'Cancelled, or 'Completed'")

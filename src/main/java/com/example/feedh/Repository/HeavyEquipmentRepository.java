@@ -11,5 +11,4 @@ public interface HeavyEquipmentRepository extends JpaRepository<HeavyEquipment, 
     HeavyEquipment findHeavyEquipmentById(Integer id);
 
     List<HeavyEquipment> findHeavyEquipmentByStatus(String status);
-
 }

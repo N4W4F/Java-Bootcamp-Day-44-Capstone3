@@ -3,8 +3,7 @@ package com.example.feedh.DTOout;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
-
+// Nawaf - EventParticipant DTO
 @Data
 @AllArgsConstructor
 public class EventParticipantDTOout {

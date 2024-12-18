@@ -11,48 +11,44 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Nawaf - Event Controller
 @RestController
-@RequestMapping("/api/v1/event")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/event")
 public class EventController {
   private final EventService eventService;
 
-  @GetMapping("/get")
-  public ResponseEntity getAll(){
+    @GetMapping("/get")
+    public ResponseEntity getAllEvents(){
       return ResponseEntity.status(200).body(eventService.getAllEvents());
   }
 
-
-  @PostMapping("/add/{adminId}")
-  public ResponseEntity addNewEvent(@PathVariable Integer adminId, @RequestBody @Valid Event event){
+    @PostMapping("/add/by/{adminId}")
+    public ResponseEntity addEvent(@PathVariable Integer adminId, @RequestBody @Valid Event event){
       eventService.addEvent(adminId,event);
-      return ResponseEntity.status(200).body(new ApiResponse("add event success"));
-  }
+      return ResponseEntity.status(200).body(new ApiResponse("Event has been added successfully"));
+    }
 
-  @PutMapping("/update/{eventId}")
-  public ResponseEntity updateEvent(@PathVariable Integer eventId,@RequestBody @Valid Event event){
-      eventService.updateEvent(eventId, event);
-      return ResponseEntity.status(200).body(new ApiResponse(" update event success"));
+    @PutMapping("/update/{eventId}/by/{adminId}")
+    public ResponseEntity updateEvent(@PathVariable Integer eventId, @PathVariable Integer adminId, @RequestBody @Valid Event event){
+      eventService.updateEvent(eventId, adminId, event);
+      return ResponseEntity.status(200).body(new ApiResponse("Event with ID: " + eventId + " has been updated successfully"));
+    }
 
-  }
+    @DeleteMapping("/delete/{eventId}/by/{adminId}")
+    public ResponseEntity deleteEvent(@PathVariable Integer adminId, @PathVariable Integer eventId){
+      eventService.deleteEvent(adminId,eventId);
+      return ResponseEntity.status(200).body(new ApiResponse("Event with ID: " + eventId + " has been deleted successfully"));
+    }
 
-
-@DeleteMapping("/delete/admin/{admainId}/event/{eventId}")
-  public ResponseEntity Delete(@PathVariable Integer admainId,@PathVariable Integer eventId){
-      eventService.deleteEvent(admainId,eventId);
-      return ResponseEntity.status(200).body(new ApiResponse("delete event success"));
-
-  }
-
-
-  //**********end point******************
+  // Services
+  ///reemas
   @GetMapping("/date/start/{start}/end/{end}")
   public ResponseEntity getDate(@PathVariable LocalDateTime start,@PathVariable LocalDateTime end){
       List<Event> events=eventService.getEventByDate(start, end);
       return ResponseEntity.status(200).body(events);
-
   }
-
+  ////reemas
   @GetMapping("/getEventByLocationAndDate")
   public ResponseEntity getEventByLocationAndDate(@RequestBody Integer customer_id,@RequestBody String location, @RequestBody LocalDateTime startDate
           ,@RequestBody LocalDateTime endDateTime){
@@ -60,6 +56,9 @@ public class EventController {
       return ResponseEntity.status(200).body(events);
 
   }
-
-
+  ///reemas
+  @GetMapping("/get/Status/{status}/Location/{location}")
+  public  ResponseEntity findEventByStatusAndLocation(@PathVariable String status,@PathVariable String location){
+    return  ResponseEntity.status(200).body(eventService.findEventByStatusAndLocation(status, location));
+  }
 }

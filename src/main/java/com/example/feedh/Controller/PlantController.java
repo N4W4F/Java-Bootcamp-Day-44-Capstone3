@@ -7,9 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Ebtehal - Plant Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/plants")
+@RequestMapping("/api/v1/plant")
 public class PlantController {
     private final PlantService plantService;
 
@@ -36,15 +37,15 @@ public class PlantController {
         return ResponseEntity.status(200).body(new ApiResponse("Plant with ID: " + plantId + " has been updated successfully"));
     }
 
-//    @PostMapping("/transfer/{farm1}/{farm2}/{ownerId}/{plantId}/{quantityToTransfer}")
-//    public ResponseEntity transferPlant(
-//            @PathVariable Integer farm1,
-//            @PathVariable Integer farm2,
-//            @PathVariable Integer ownerId,
-//            @PathVariable Integer plantId,
-//            @PathVariable Integer quantityToTransfer) {
-//        plantService.transferPlant(farm1, farm2, ownerId, plantId, quantityToTransfer);
-//        return ResponseEntity.status(200)
-//                .body(new ApiResponse("Successfully transferred " + quantityToTransfer + " plants from farm " + farm1 + " to farm " + farm2));
-//    }
+    @PutMapping("/transfer/{farm1}/{farm2}/{ownerId}/{type}/{quantityToTransfer}")
+    public ResponseEntity transferPlant(
+            @PathVariable Integer farm1,
+            @PathVariable Integer farm2,
+            @PathVariable Integer ownerId,
+            @PathVariable String  type,
+            @PathVariable Integer quantityToTransfer) {
+        plantService.transferPlantBetweenFarms(farm1, farm2, ownerId, type, quantityToTransfer);
+        return ResponseEntity.status(200)
+                .body(new ApiResponse("Successfully transferred " + quantityToTransfer + " plants from farm " + farm1 + " to farm " + farm2));
+    }
 }

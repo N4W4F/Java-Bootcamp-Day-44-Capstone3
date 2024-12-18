@@ -2,15 +2,14 @@ package com.example.feedh.Service;
 
 import com.example.feedh.ApiResponse.ApiException;
 import com.example.feedh.DTOout.AdminDTOout;
+import com.example.feedh.DTOout.CustomerDTOout;
 import com.example.feedh.DTOout.EventDTOout;
+import com.example.feedh.DTOout.EventParticipantDTOout;
 import com.example.feedh.Model.Admin;
-import com.example.feedh.Model.Customer;
 import com.example.feedh.Model.Event;
 import com.example.feedh.Model.EventParticipant;
 import com.example.feedh.Repository.AdminRepository;
 import com.example.feedh.Repository.EventParticipantRepository;
-import com.example.feedh.Repository.EventRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ import java.util.List;
 public class AdminService {
     private final AdminRepository adminRepository;
     private final EventParticipantRepository eventParticipantRepository;
-    private final EventRepository eventRepository;
 
     public List<AdminDTOout> getAllAdmin() {
         List<Admin> admins = adminRepository.findAll();
@@ -63,23 +61,19 @@ public class AdminService {
     }
     // CRUD - End
 
-    //**************** End point***********
-
-
-    public void approveParticipation(Integer eventId, Integer adminId) {
+    // Services
+    public void approveParticipation(Integer eventParticipantId, Integer adminId) {
         Admin admin = adminRepository.findAdminById(adminId);
         if (admin == null) {
             throw new ApiException("Admin not found");
         }
-        EventParticipant eventParticipant = eventParticipantRepository.findEventParticipantById(eventId);
+        EventParticipant eventParticipant = eventParticipantRepository.findEventParticipantById(eventParticipantId);
         if (eventParticipant == null) {
             throw new ApiException("Event Participant not found");
         }
         eventParticipant.setStatus("Accepted");
         eventParticipantRepository.save(eventParticipant);
     }
-
-
 
     public void rejectParticipation(Integer eventId, Integer adminId) {
         Admin admin = adminRepository.findAdminById(adminId);
@@ -92,5 +86,46 @@ public class AdminService {
         }
         eventParticipant.setStatus("Rejected");
         eventParticipantRepository.save(eventParticipant);
+    }
+
+    public List<EventParticipantDTOout> getParticipantsByStatus(Integer adminId, String status) {
+        List<EventParticipant> participants = eventParticipantRepository.findEventParticipantByStatus(status);
+        Admin admin = adminRepository.findAdminById(adminId);
+        if (admin == null) {
+            throw new ApiException("You don't have the permission to succeed");
+        }
+
+        List<EventParticipantDTOout> participantDTOS = new ArrayList<>();
+
+        for (EventParticipant participant : participants) {
+
+            CustomerDTOout customerDTOout = new CustomerDTOout(
+                    participant.getCustomer().getName(),
+                    participant.getCustomer().getEmail(),
+                    participant.getCustomer().getPhoneNumber(),
+                    participant.getCustomer().getAddress(),
+                    participant.getCustomer().getRegisterStatus(),
+                    null, // Assuming farms aren't needed for this response
+                    null  // Assuming rentals aren't needed for this response
+            );
+
+
+            EventDTOout eventDTOout = new EventDTOout(
+                    participant.getEvent().getName(),
+                    participant.getEvent().getDescription(),
+                    participant.getEvent().getLocation(),
+                    participant.getEvent().getStartDateTime(),
+                    participant.getEvent().getEndDateTime(),
+                    participant.getEvent().getStatus()
+            );
+
+            // Add to the DTO list
+            participantDTOS.add(new EventParticipantDTOout(
+                    participant.getStatus(),
+                    customerDTOout,
+                    eventDTOout
+            ));
+        }
+        return participantDTOS;
     }
 }

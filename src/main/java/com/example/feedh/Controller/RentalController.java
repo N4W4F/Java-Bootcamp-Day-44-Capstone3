@@ -1,7 +1,6 @@
 package com.example.feedh.Controller;
 
 import com.example.feedh.ApiResponse.ApiResponse;
-import com.example.feedh.Model.HeavyEquipment;
 import com.example.feedh.Model.Rental;
 import com.example.feedh.Service.RentalService;
 import jakarta.validation.Valid;
@@ -11,47 +10,48 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+// Reemas - Rental Controller
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/rentals")
+@RequestMapping("/api/v1/rental")
 public class RentalController {
     private final RentalService rentalService;
-
+/// reemas
     @GetMapping("/get")
     public ResponseEntity getAllRentals() {
         return ResponseEntity.status(200).body(rentalService.getAllRentals());
     }
-
+    /// reemas & Nawaf
     @PostMapping("/add/{customerId}/{farmer_id}/{heavyEquipment_id}")
     public ResponseEntity addRental(@PathVariable Integer customerId, @PathVariable Integer farmer_id, @PathVariable Integer heavyEquipment_id, @RequestBody @Valid Rental rental) {
         rentalService.addRental(customerId,farmer_id,heavyEquipment_id, rental);
         return ResponseEntity.status(200).body(new ApiResponse("Rental has been added to customer with ID: " + customerId + " successfully"));
     }
-
+    /// reemas
     @PutMapping("/update/{rentalId}")
     public ResponseEntity updateRental(@PathVariable Integer rentalId, @RequestBody @Valid Rental rental) {
         rentalService.updateRental(rentalId, rental);
         return ResponseEntity.status(200).body(new ApiResponse("Rental with ID: " + rentalId + " has been updated successfully"));
     }
 
-    @DeleteMapping("/delete/{rentalId}")
-    public ResponseEntity deleteRental(@PathVariable Integer rentalId) {
-        rentalService.deleteRental(rentalId);
-        return ResponseEntity.status(200).body(new ApiResponse("Rental with ID: " + rentalId + " has been deleted successfully"));
-    }
-
-
-       @PostMapping("/calculate-rental-price/{rentalStartDate}/{rentalEndDate}")
-        public ResponseEntity calculateRentalPrice(@PathVariable LocalDateTime rentalStartDate,@PathVariable LocalDateTime rentalEndDate,@RequestBody HeavyEquipment heavyEquipment){
-                 Double rentalPrice = rentalService.calculateRentalPrice(rentalStartDate, rentalEndDate, heavyEquipment);
+    /// reemas
+       @PostMapping("/calculate-rental-price/{rentalStartDate}/{rentalEndDate}/{price}")
+        public ResponseEntity calculateRentalPrice(@PathVariable LocalDateTime rentalStartDate,@PathVariable LocalDateTime rentalEndDate,@PathVariable Double price){
+                 Double rentalPrice = rentalService.calculateRentalPrice(rentalStartDate, rentalEndDate,price );
            return ResponseEntity.status(200).body(rentalPrice);
         }
 
-
-
+    /// reemas
+    @PutMapping("/update-rental-Status")
         public ResponseEntity updateRentalStatus(){
             rentalService.updateRentalStatus();
         return ResponseEntity.status(200).body(new ApiResponse("Rental status method is running"));
 
         }
+    /// reemas
+        @GetMapping("/get-ByPrice-Status/{rentalId}/{price}/{status}")
+        public  ResponseEntity getRentalByPriceAndStatus(@PathVariable Integer rentalId, @PathVariable Double price,@PathVariable String status){
+        return  ResponseEntity.status(200).body(rentalService.getRentalByPriceAndStatus(rentalId, price, status));
+    }
+
 }

@@ -4,21 +4,17 @@ import com.example.feedh.ApiResponse.ApiException;
 import com.example.feedh.DTOout.*;
 import com.example.feedh.Model.*;
 import com.example.feedh.Repository.CustomerRepository;
-import com.example.feedh.Repository.EventParticipantRepository;
-import com.example.feedh.Repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+// Reemas - Customer Service
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
-    private final EventRepository eventRepository;
-    private final EventParticipantRepository eventParticipantRepository;
 
     public List<CustomerDTOout> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
@@ -82,7 +78,6 @@ public class CustomerService {
         oldCustomer.setRegisterStatus(customer.getRegisterStatus());
         customerRepository.save(oldCustomer);
     }
-
     public void deleteCustomer(Integer customerId) {
         Customer customer = customerRepository.findCustomerById(customerId);
         if (customer == null) {
@@ -91,34 +86,4 @@ public class CustomerService {
         customerRepository.delete(customer);
     }
     //CURD - End
-
-    //********** End Points *********
-//    public void requestForEventParticipation(Integer customerId, Integer eventId,Integer eventPar_) {
-////        EventParticipant eventParticipant=eventParticipantRepository.
-//        Customer customer = customerRepository.findCustomerById(customerId);
-//        if (customer == null) {
-//            throw new ApiException("Customer with ID: " + customerId + " was not found");
-//        }
-//
-//        Event event = eventRepository.findEventById(eventId);
-//        if (event == null) {
-//            throw new ApiException("Event with ID: " + eventId + " was not found");
-//        }
-//        // Optional: Send an email for admin when a user apply for a request
-//        eventParticipant.getCustomers().add(customer);
-//        eventParticipantRepository.save(eventParticipant);
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

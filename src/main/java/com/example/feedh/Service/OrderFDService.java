@@ -44,7 +44,7 @@ public class OrderFDService {
         if (customer == null) {
             throw new ApiException("Customer with ID: " + customerId + " was not found");
         }
-        if (orderFD.getTotalAmount() > checkOrderHistory(customerId)) {
+        if (orderFD.getTotalAmount() > checkAverageOrders(customerId)) {
             sendNotification(customer);
         }
         orderFD.setCustomer(customer);
@@ -75,7 +75,7 @@ public class OrderFDService {
     // Getter
 
     // Services
-    public Double checkOrderHistory(Integer customerId) {
+    public Double checkAverageOrders(Integer customerId) {
         Customer customer = customerRepository.findCustomerById(customerId);
         if (customer == null) {
             throw new ApiException("Customer with ID: " + customerId + " was not found");
@@ -86,6 +86,27 @@ public class OrderFDService {
         }
         avg /= customer.getOrders().size();
         return avg;
+    }
+
+    public List<OrderFDDTOout> getOrderHistoryByCustomer(Integer customerId) {
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            throw new ApiException("Customer with ID: " + customerId + " was not found");
+        }
+
+        List<OrderFD> orders = orderFDRepository.findOrderFDByCustomer(customer);
+        if (orders.isEmpty()) {
+            throw new ApiException("There are no orders yet");
+        }
+        List<OrderFDDTOout> orderFDDTOS = new ArrayList<>();
+        for (OrderFD o : orders) {
+            List<ProductDTOout> productDTOS = new ArrayList<>();
+            for (Product p : o.getProducts()) {
+                productDTOS.add(new ProductDTOout(p.getName(), p.getCategory(), p.getDescription(), p.getPrice(), p.getQuantity()));
+            }
+            orderFDDTOS.add(new OrderFDDTOout(o.getOrderDateTime(), o.getQuantity(), o.getTotalAmount(), o.getStatus(),productDTOS));
+        }
+        return orderFDDTOS;
     }
 
     private void sendNotification(Customer customer) {
