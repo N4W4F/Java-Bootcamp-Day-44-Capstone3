@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 
+// Ebtehal - Supplier DTO Out
 @Data
 @AllArgsConstructor
 public class SupplierDTOout {

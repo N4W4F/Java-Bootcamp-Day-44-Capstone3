@@ -17,41 +17,43 @@ import java.util.List;
 @RequestMapping("/api/v1/heavy-equipment")
 public class HeavyEquipmentController {
     private final HeavyEquipmentService heavyEquipmentService;
-
+    // CRUD - Start
     @GetMapping("/get")
     public ResponseEntity getAllHeavyEquipments() {
         return ResponseEntity.status(200).body(heavyEquipmentService.getAllHeavyEquipments());
     }
 
-    @PostMapping("/add/{supplierId}")
+    @PostMapping("/add/by/{supplierId}")
     public ResponseEntity addHeavyEquipment(@PathVariable Integer supplierId, @RequestBody @Valid HeavyEquipment heavyEquipment) {
         heavyEquipmentService.addHeavyEquipment(supplierId, heavyEquipment);
         return ResponseEntity.status(200).body(new ApiResponse("Heavy Equipment has been added to supplier with ID: " + supplierId + " successfully"));
     }
 
-    @PutMapping("/update/{heavyEquipmentId}")
-    public ResponseEntity updateHeavyEquipment(@PathVariable Integer heavyEquipmentId, @RequestBody @Valid HeavyEquipment heavyEquipment) {
-        heavyEquipmentService.updateHeavyEquipment(heavyEquipmentId, heavyEquipment);
+    @PutMapping("/update/{heavyEquipmentId}/by/{supplierId}")
+    public ResponseEntity updateHeavyEquipment(@PathVariable Integer heavyEquipmentId, @PathVariable Integer supplierId, @RequestBody @Valid HeavyEquipment heavyEquipment) {
+        heavyEquipmentService.updateHeavyEquipment(heavyEquipmentId, supplierId, heavyEquipment);
         return ResponseEntity.status(200).body(new ApiResponse("Heavy Equipment with ID: " + heavyEquipmentId + " has been updated successfully"));
     }
 
-    @DeleteMapping("/delete/{heavyEquipmentId}")
-    public ResponseEntity deleteHeavyEquipment(@PathVariable Integer heavyEquipmentId) {
-        heavyEquipmentService.deleteHeavyEquipment(heavyEquipmentId);
+    @DeleteMapping("/delete/{heavyEquipmentId}/by/{supplierId}")
+    public ResponseEntity deleteHeavyEquipment(@PathVariable Integer heavyEquipmentId, @PathVariable Integer supplierId) {
+        heavyEquipmentService.deleteHeavyEquipment(heavyEquipmentId, supplierId);
         return ResponseEntity.status(200).body(new ApiResponse("Heavy Equipment with ID: " + heavyEquipmentId + " has been deleted successfully"));
     }
+    // CRUD - End
 
-/// reemas
-@PutMapping("/changStatus/{heavyEquipmentId}/{rentalId}")
+    // Services
+    // Reemas - Endpoint changes the heavy equipment status to Available
+    @PutMapping("/chang-status/{heavyEquipmentId}/{rentalId}")
     public ResponseEntity changStatusForTheHeavyE(@PathVariable Integer heavyEquipmentId, @PathVariable Integer rentalId){
-       heavyEquipmentService.changStatusForTheHeavyEquipment(heavyEquipmentId, rentalId);
-       return ResponseEntity.status(200).body(new ApiResponse("Done Change the status for the Heavy Equipment"));
+        heavyEquipmentService.changStatusForTheHeavyEquipment(heavyEquipmentId, rentalId);
+        return ResponseEntity.status(200).body(new ApiResponse("Done Change the status for the Heavy Equipment"));
     }
 
-    /// reemas
-    @GetMapping("/getHeavyEquipmentByStatus/{supplier_id}/{status}")
-public ResponseEntity getHeavyEquipmentByStatus(@PathVariable Integer supplier_id,@PathVariable String status ){
-    List<HeavyEquipment> heavyEquipments =heavyEquipmentService.getHeavyEquipmentByStatus(supplier_id, status);
-    return ResponseEntity.status(200).body(heavyEquipments);
-}
+    // Reemas - Endpoint returns a list of heavy equipments by status
+    @GetMapping("/get/by-status/{supplier_id}/{status}")
+    public ResponseEntity getHeavyEquipmentByStatus(@PathVariable Integer supplier_id,@PathVariable String status ){
+        List<HeavyEquipment> heavyEquipments =heavyEquipmentService.getHeavyEquipmentByStatus(supplier_id, status);
+        return ResponseEntity.status(200).body(heavyEquipments);
+    }
 }

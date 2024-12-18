@@ -1,14 +1,12 @@
 package com.example.feedh.DTOout;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 
-// Reemas - Customer DTO
-@Getter
-@Setter
+// Reemas - Customer DTO Out
+@Data
 @AllArgsConstructor
 public class CustomerDTOout {
     private String name;

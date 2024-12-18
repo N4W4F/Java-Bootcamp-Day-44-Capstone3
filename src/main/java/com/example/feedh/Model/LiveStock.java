@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// Ebtehal - LiveStock Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,7 +25,6 @@ public class LiveStock {
     @Pattern(regexp = "^(Sheep|Camel)$",
             message = "Live Stock Type must be either 'Sheep' or 'Camel'")
     private String type;
-
 
     @Column(columnDefinition = "VARCHAR(50) NOT NULL")
     @NotEmpty(message = "Live Stock Breed cannot be empty")
@@ -43,7 +43,7 @@ public class LiveStock {
             message = "Live Stock Feed Type must be either 'Grain', 'Hay', 'Grass', or 'Mixed'")
     private String feedType;
 
-    //
+    // Relations
     @ManyToOne
     @JsonIgnore
     private Farm farm;

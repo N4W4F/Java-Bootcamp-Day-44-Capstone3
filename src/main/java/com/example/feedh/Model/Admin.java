@@ -13,6 +13,7 @@ import lombok.Setter;
 
 import java.util.Set;
 
+// Nawaf - Admin Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -46,7 +47,7 @@ public class Admin {
             message = "Customer Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long.")
     private String password;
 
-    //
+    // Relations
    @OneToMany(cascade = CascadeType.ALL, mappedBy = "admin")
    @JsonIgnore
    private Set<Event> events;

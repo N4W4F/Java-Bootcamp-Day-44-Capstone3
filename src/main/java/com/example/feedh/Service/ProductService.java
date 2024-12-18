@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+// Reemas - Product Service
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -78,7 +79,6 @@ public class ProductService {
     // CRUD - End
 
     // Services
-
     public ProductDTOout getProductById(Integer productId) {
         Product product = productRepository.findProductById(productId);
         if (product == null) {
@@ -170,7 +170,7 @@ public class ProductService {
         sendPurchaseNotification(customer, product, quantity);
     }
 
-    public String applyDiscountToProduct(Integer supplierId, Integer productId, Double discount) {
+    public void applyDiscountToProduct(Integer supplierId, Integer productId, Double discount) {
         Product product = productRepository.findProductById(productId);
         if (product==null){
             throw new ApiException("product not found");
@@ -191,10 +191,9 @@ public class ProductService {
         product.setPrice(discountedPrice);
 
         productRepository.save(product);
-
-        return "Discount of " + discount + "% applied successfully. New price: " + discountedPrice;
     }
 
+    // Nawaf - Notification method used to notify the customers when they purchase a product
     private void sendPurchaseNotification(Customer customer, Product product, Integer quantity) {
         String email = customer.getEmail();
         if (email == null) {
@@ -216,7 +215,6 @@ public class ProductService {
                         "Your Farm Management Team",
                 customer.getName(), product.getName(), quantity, product.getPrice(), product.getPrice() * quantity
         );
-
         emailService.sendEmail(email, subject, body);
     }
 }

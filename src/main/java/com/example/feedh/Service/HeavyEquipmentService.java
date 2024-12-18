@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+// Ebtehal - HeavyEquipments Service
 @Service
 @RequiredArgsConstructor
 public class HeavyEquipmentService {
@@ -47,11 +48,17 @@ public class HeavyEquipmentService {
         heavyEquipmentRepository.save(heavyEquipment);
     }
 
-    public void updateHeavyEquipment(Integer heavyEquipmentId, HeavyEquipment heavyEquipment) {
+    public void updateHeavyEquipment(Integer heavyEquipmentId, Integer supplierId, HeavyEquipment heavyEquipment) {
         HeavyEquipment oldHeavyEquipment = heavyEquipmentRepository.findHeavyEquipmentById(heavyEquipmentId);
         if (heavyEquipment == null) {
             throw new ApiException("Heavy Equipment with ID: " + heavyEquipmentId + " was not found");
         }
+
+        Supplier supplier = supplierRepository.findSupplierById(supplierId);
+        if (supplier == null) {
+            throw new ApiException("You don't have permission to update this heavy equipment");
+        }
+
         oldHeavyEquipment.setName(heavyEquipment.getName());
         oldHeavyEquipment.setPricePerHour(heavyEquipment.getPricePerHour());
         oldHeavyEquipment.setInsurance(heavyEquipment.getInsurance());
@@ -59,16 +66,20 @@ public class HeavyEquipmentService {
         heavyEquipmentRepository.save(oldHeavyEquipment);
     }
 
-    public void deleteHeavyEquipment(Integer heavyEquipmentId) {
+    public void deleteHeavyEquipment(Integer heavyEquipmentId, Integer supplierId) {
         HeavyEquipment heavyEquipment = heavyEquipmentRepository.findHeavyEquipmentById(heavyEquipmentId);
         if (heavyEquipment == null) {
             throw new ApiException("Heavy Equipment with ID: " + heavyEquipmentId + " was not found");
         }
+
+        Supplier supplier = supplierRepository.findSupplierById(supplierId);
+        if (supplier == null) {
+            throw new ApiException("You don't have permission to delete this heavy equipment");
+        }
+
         heavyEquipmentRepository.delete(heavyEquipment);
     }
     // CRUD - End
-
-    // Getters
 
     // Services
     /// //1  chang Status For The HeavyEquipment
@@ -98,74 +109,4 @@ public class HeavyEquipmentService {
         }
         return heavyEquipments;
     }
-
-    ///
-//    public Double checkRentalHistoryAndNotifyDiscount(Integer supplierId, Integer customerId,HeavyEquipment heavyEquipment) {
-//        Supplier supplier = supplierRepository.findSupplierById(supplierId);
-//        if (supplier == null) {
-//            throw new ApiException("Supplier with ID: " + supplierId + " was not found");
-//        }
-//
-//        Customer customer = customerRepository.findCustomerById(customerId);
-//        if (customer == null) {
-//            throw new ApiException("Customer with ID: " + customerId + " was not found");
-//        }
-//
-//        Integer rentalCount = 0;
-//
-//        for (Rental r : rentalRepository.findAll()) {
-//            for (HeavyEquipment he : r.getHeavyEquipments()) {
-//                if (r.getCustomer().getId().equals(customerId) &&
-//                        he.getSupplier().getId().equals(supplierId)) {
-//                    rentalCount++;
-//                }
-//            }
-//        }
-//
-//
-//        if (rentalCount >= 3) {
-//            sendDiscountNotification(customer, supplier);
-//            double discountedAmount = heavyEquipment.getPricePerHour()* 0.5; //
-//            return discountedAmount;
-//        }
-//        return heavyEquipment.getPricePerHour();
-//    }
-
-//    @Transactional
-//    public Double checkRentalHistoryAndNotifyDiscount(Integer supplierId, Integer customerId, HeavyEquipment heavyEquipment) {
-//        // Validate supplier
-//        Supplier supplier = supplierRepository.findById(supplierId)
-//                .orElseThrow(() -> new ApiException("Supplier with ID: " + supplierId + " was not found"));
-//
-//        // Validate customer
-//        Customer customer = customerRepository.findById(customerId)
-//                .orElseThrow(() -> new ApiException("Customer with ID: " + customerId + " was not found"));
-//
-//        // Count previous rentals for this customer and supplier
-//        int DISCOUNT_THRESHOLD = 3; // Minimum rentals for a discount
-//        double DISCOUNT_RATE = 0.5; // 50% discount
-//        int rentalCount = 0;
-//
-//
-//        // Check for discount eligibility
-//
-//        for (Rental r : rentalRepository.findAll()) {
-//            if (r.getCustomer().getId().equals(customerId)) {
-//                for (HeavyEquipment he : r.getHeavyEquipments()) {
-//                    if (he.getSupplier().getId().equals(supplierId)) {
-//                        rentalCount++;
-//                        System.out.println("We are in block");
-//                    }
-//                }
-//            }
-//        }
-//        if (rentalCount >= DISCOUNT_THRESHOLD) {
-//            sendDiscountNotification(customer, supplier);
-//            return heavyEquipment.getPricePerHour() * (1 - DISCOUNT_RATE); // Apply discount
-//        }
-//        // Return full price if no discount applies
-//        return heavyEquipment.getPricePerHour();
-//    }
-
-
 }

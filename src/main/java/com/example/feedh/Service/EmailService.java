@@ -6,6 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+// Nawaf - Email Service
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -21,6 +22,4 @@ public class EmailService {
         mailSender.send(message);
         System.out.println("Email sent successfully to: " + to);
     }
-
-
 }

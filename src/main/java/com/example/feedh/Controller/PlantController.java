@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/plant")
 public class PlantController {
     private final PlantService plantService;
-
+    // CRUD - Start
     @GetMapping("/get")
     public ResponseEntity getAllPlants() {
         return ResponseEntity.status(200).body(plantService.getAllPlants());
@@ -23,7 +23,6 @@ public class PlantController {
     public ResponseEntity addFarm(@PathVariable Integer farmId, @RequestBody @Valid Plant plant) {
         plantService.addPlant(farmId, plant);
         return ResponseEntity.status(200).body(new ApiResponse("Plant has been added to farm with ID: " + farmId + " successfully"));
-
     }
 
     @PutMapping("/update/{plantId}")
@@ -31,12 +30,15 @@ public class PlantController {
         plantService.updatePlant(plantId, plant);
         return ResponseEntity.status(200).body(new ApiResponse("Plant with ID: " + plantId + " has been updated successfully"));
     }
-@DeleteMapping("/delete/{farmId}/{plantId}")
+
+    @DeleteMapping("/delete/{farmId}/{plantId}")
     public ResponseEntity deletePlant(@PathVariable Integer farmId,@PathVariable Integer plantId){
         plantService.deletePlant(farmId, plantId);
         return ResponseEntity.status(200).body(new ApiResponse("Plant with ID: " + plantId + " has been updated successfully"));
     }
+    // CRUD - End
 
+    // Ebtehal - Endpoint lets the customer to transfer their plants between customer's farms
     @PutMapping("/transfer/{farm1}/{farm2}/{ownerId}/{type}/{quantityToTransfer}")
     public ResponseEntity transferPlant(
             @PathVariable Integer farm1,

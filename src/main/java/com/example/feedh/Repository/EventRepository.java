@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Nawaf - EventParticipant Repository
 @Repository
 public interface EventRepository extends JpaRepository<Event, Integer> {
     Event findEventById(Integer id);

@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 
-// Nawaf - Admin DTO
+// Nawaf - Admin DTO Out
 @Data
 @AllArgsConstructor
 public class AdminDTOout {

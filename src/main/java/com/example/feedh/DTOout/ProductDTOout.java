@@ -1,11 +1,10 @@
 package com.example.feedh.DTOout;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+// Reemas - Product DTO Out
+@Data
 @AllArgsConstructor
 public class ProductDTOout {
     private String name;

@@ -16,12 +16,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+// Nawaf - Admin Service
 @Service
 @RequiredArgsConstructor
 public class AdminService {
     private final AdminRepository adminRepository;
     private final EventParticipantRepository eventParticipantRepository;
 
+    // CRUD - Start
     public List<AdminDTOout> getAllAdmin() {
         List<Admin> admins = adminRepository.findAll();
         List<AdminDTOout> adminDTOS = new ArrayList<>();

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Reemas - Rental Repository
 @Repository
 public interface RentalRepository extends JpaRepository<Rental, Integer> {
     Rental findRentalById(Integer id);

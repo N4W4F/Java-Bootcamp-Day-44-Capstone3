@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// Ebtehal - Supplier Repository
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
     Supplier findSupplierById(Integer id);

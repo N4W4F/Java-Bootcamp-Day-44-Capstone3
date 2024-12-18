@@ -15,6 +15,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+// Nawaf - Event Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -57,7 +58,7 @@ public class Event {
             message = "Event Status must be either 'Scheduled', 'Ongoing', or 'Completed'")
     private String status;
 
-    //
+    // Relations
     @ManyToOne
     @JsonIgnore
     private Admin admin;

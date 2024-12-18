@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+// Nawaf - Farmer Service
 @Service
 @RequiredArgsConstructor
 public class FarmerService {
@@ -31,7 +32,7 @@ public class FarmerService {
         return farmerDTOS;
     }
 
-    public void addFarmer(Integer customerId, Integer farmId, Farmer farmer) {
+    public void addFarmer(Integer farmId, Integer customerId, Farmer farmer) {
         Customer customer = customerRepository.findCustomerById(customerId);
         if (customer == null) {
             throw new ApiException("Customer with ID: " + customerId + " was not found");
@@ -41,6 +42,11 @@ public class FarmerService {
         if (farm == null) {
             throw new ApiException("Farm with ID: " + farmId + " was not found");
         }
+
+        if (!farmer.getCustomer().getId().equals(customerId)) {
+            throw new ApiException("You don't have permission on this farmer");
+        }
+
         if (isFarmerEligible(farm, farmer)) {
             farmer.setCustomer(customer);
             farmer.setFarm(farm);
@@ -50,7 +56,7 @@ public class FarmerService {
             throw new ApiException("Invalid assignment: The farmer's role is not suitable for the selected farm type");
         }
     }
-    // Helper method for the above service
+    //Nawaf - Helper method for the above service
     private boolean isFarmerEligible(Farm farm, Farmer farmer) {
         String farmType = farm.getType();
         String visaType = farmer.getVisaType();
@@ -60,11 +66,21 @@ public class FarmerService {
                 farmType.equals("Mixed");
     }
 
-    public void updateFarmer(Integer farmerId, Farmer farmer) {
+    public void updateFarmer(Integer farmerId, Integer customerId, Farmer farmer) {
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            throw new ApiException("Customer with ID: " + customerId + " was not found");
+        }
+
         Farmer oldFarmer = farmerRepository.findFarmerById(farmerId);
         if (oldFarmer == null) {
             throw new ApiException("Farmer with ID: " + farmerId + " was not found");
         }
+
+        if (!farmer.getCustomer().getId().equals(customerId)) {
+            throw new ApiException("You don't have permission on this farmer");
+        }
+
         oldFarmer.setName(farmer.getName());
         oldFarmer.setPhoneNumber(farmer.getPhoneNumber());
         oldFarmer.setAddress(farmer.getAddress());
@@ -73,13 +89,21 @@ public class FarmerService {
         farmerRepository.save(oldFarmer);
     }
 
-    public void deleteFarmer(Integer ownerId,Integer farmerId) {
-        Customer customer=customerRepository.findCustomerById(ownerId);
-        Farmer farmer = farmerRepository.findFarmerById(farmerId);
-
-        if (customer==null||farmer == null) {
-            throw new ApiException("Farmer can not delete");
+    public void deleteFarmer(Integer farmerId, Integer customerId) {
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer==null) {
+            throw new ApiException("Customer with ID: " + customerId + " was not found");
         }
+
+        Farmer farmer = farmerRepository.findFarmerById(farmerId);
+        if (farmer == null) {
+            throw new ApiException("Farmer with ID: " + farmerId + " was not found");
+        }
+
+        if (!farmer.getCustomer().getId().equals(customerId)) {
+            throw new ApiException("You don't have permission on this farmer");
+        }
+
         farmerRepository.delete(farmer);
     }
 
@@ -119,6 +143,64 @@ public class FarmerService {
 
         farmer.setFarm(farm2);
         farmerRepository.save(farmer);
-        System.out.println("Successfully transferred farmer " + farmerId + " from farm " + farm1Id + " to farm " + farm2Id);
+    }
+
+    public List<FarmerDTOout> getFarmerByCustomer(Integer customerId) {
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            throw new ApiException("Customer with ID: " + customerId + " was not found");
+        }
+
+        List<Farmer> farmers = farmerRepository.findFarmerByCustomer(customer);
+        if (farmers.isEmpty()) {
+            throw new ApiException("There are no farmers registered on this customer");
+        }
+
+        List<FarmerDTOout> farmerDTOS = new ArrayList<>();
+        for (Farmer f : farmers) {
+            farmerDTOS.add(new FarmerDTOout(f.getName(), f.getPhoneNumber(), f.getAddress(), f.getVisaType()));
+        }
+        return farmerDTOS;
+    }
+
+    public List<FarmerDTOout> getFarmerByCustomerAndFarm(Integer customerId, Integer farmId) {
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            throw new ApiException("Customer with ID: " + customerId + " was not found");
+        }
+
+        Farm farm = farmRepository.findFarmById(farmId);
+        if (farm == null) {
+            throw new ApiException("Farm with ID: " + farmId + " was not found");
+        }
+
+        List<Farmer> farmers = farmerRepository.findFarmerByCustomerAndFarm(customer, farm);
+        if (farmers.isEmpty()) {
+            throw new ApiException("There are no farmers yet");
+        }
+
+        List<FarmerDTOout> farmerDTOS = new ArrayList<>();
+        for (Farmer f : farmers) {
+            farmerDTOS.add(new FarmerDTOout(f.getName(), f.getPhoneNumber(), f.getAddress(), f.getVisaType()));
+        }
+        return farmerDTOS;
+    }
+
+    public List<FarmerDTOout> getFarmerByCustomerAndVisaType(Integer customerId, String visaType) {
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            throw new ApiException("Customer with ID: " + customerId + " was not found");
+        }
+
+        List<Farmer> farmers = farmerRepository.findFarmerByCustomerAndVisaType(customer, visaType);
+        if (farmers.isEmpty()) {
+            throw new ApiException("There are no farmers yet");
+        }
+
+        List<FarmerDTOout> farmerDTOS = new ArrayList<>();
+        for (Farmer f : farmers) {
+            farmerDTOS.add(new FarmerDTOout(f.getName(), f.getPhoneNumber(), f.getAddress(), f.getVisaType()));
+        }
+        return farmerDTOS;
     }
 }

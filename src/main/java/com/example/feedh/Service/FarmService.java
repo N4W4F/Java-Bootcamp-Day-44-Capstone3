@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+// Nawaf - Farm Service
 @Service
 @RequiredArgsConstructor
 public class FarmService {
@@ -78,7 +79,7 @@ public class FarmService {
     }
 
     public void deleteFarm(Integer ownerId,Integer farmId) {
-        Customer customer=customerRepository.findCustomerById(ownerId);
+        Customer customer = customerRepository.findCustomerById(ownerId);
         Farm farm = farmRepository.findFarmById(farmId);
         if (customer==null||farm == null) {
             throw new ApiException("You can not delete the farm");
@@ -87,12 +88,7 @@ public class FarmService {
     }
     // CRUD - End
 
-    // Getters
-
     // Services
-
-
-
     public List<Farm>getFarmByLocation(Integer customerId,Integer farmId ,String location){
         Customer customer=customerRepository.findCustomerById(customerId);
         if (customer == null) {
@@ -109,5 +105,61 @@ public class FarmService {
         }
 
         return farmList;
+    }
+
+    public List<FarmDTOout> getFarmByCustomer(Integer customerId) {
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            throw new ApiException("Customer with ID: " + customerId + " was not found");
+        }
+        List<Farm> farms = farmRepository.findFarmByCustomer(customer);
+        List<FarmDTOout> farmDTOS = new ArrayList<>();
+        for (Farm f : farms) {
+            List<FarmerDTOout> farmerDTOS = new ArrayList<>();
+            for (Farmer farmer : f.getFarmers()) {
+                farmerDTOS.add(new FarmerDTOout(farmer.getName(), farmer.getPhoneNumber(), farmer.getAddress(), farmer.getVisaType()));
+            }
+
+            List<PlantDTOout> plantDTOS = new ArrayList<>();
+            for (Plant p : f.getPlants()) {
+                plantDTOS.add(new PlantDTOout(p.getType(), p.getQuantity()));
+            }
+
+            List<LiveStockDTOout> liveStockDTOS = new ArrayList<>();
+            for (LiveStock ls : f.getLiveStocks()) {
+                liveStockDTOS.add(new LiveStockDTOout(ls.getType(), ls.getBreed(), ls.getQuantity(), ls.getFeedType()));
+            }
+
+            farmDTOS.add(new FarmDTOout(f.getName(), f.getLocation(), f.getSize(), f.getType(), farmerDTOS, plantDTOS, liveStockDTOS));
+        }
+        return farmDTOS;
+    }
+
+    public List<FarmDTOout> getFarmByCustomerAndType(Integer customerId, String type) {
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            throw new ApiException("Customer with ID: " + customerId + " was not found");
+        }
+        List<Farm> farms = farmRepository.findFarmByCustomerAndType(customer, type);
+        List<FarmDTOout> farmDTOS = new ArrayList<>();
+        for (Farm f : farms) {
+            List<FarmerDTOout> farmerDTOS = new ArrayList<>();
+            for (Farmer farmer : f.getFarmers()) {
+                farmerDTOS.add(new FarmerDTOout(farmer.getName(), farmer.getPhoneNumber(), farmer.getAddress(), farmer.getVisaType()));
+            }
+
+            List<PlantDTOout> plantDTOS = new ArrayList<>();
+            for (Plant p : f.getPlants()) {
+                plantDTOS.add(new PlantDTOout(p.getType(), p.getQuantity()));
+            }
+
+            List<LiveStockDTOout> liveStockDTOS = new ArrayList<>();
+            for (LiveStock ls : f.getLiveStocks()) {
+                liveStockDTOS.add(new LiveStockDTOout(ls.getType(), ls.getBreed(), ls.getQuantity(), ls.getFeedType()));
+            }
+
+            farmDTOS.add(new FarmDTOout(f.getName(), f.getLocation(), f.getSize(), f.getType(), farmerDTOS, plantDTOS, liveStockDTOS));
+        }
+        return farmDTOS;
     }
 }

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/v1/rental")
 public class RentalController {
     private final RentalService rentalService;
+    // CRUD - Start
 /// reemas
     @GetMapping("/get")
     public ResponseEntity getAllRentals() {
@@ -33,25 +34,26 @@ public class RentalController {
         rentalService.updateRental(rentalId, rental);
         return ResponseEntity.status(200).body(new ApiResponse("Rental with ID: " + rentalId + " has been updated successfully"));
     }
+    // CRUD - End
 
-    /// reemas
-       @PostMapping("/calculate-rental-price/{rentalStartDate}/{rentalEndDate}/{price}")
-        public ResponseEntity calculateRentalPrice(@PathVariable LocalDateTime rentalStartDate,@PathVariable LocalDateTime rentalEndDate,@PathVariable Double price){
-                 Double rentalPrice = rentalService.calculateRentalPrice(rentalStartDate, rentalEndDate,price );
-           return ResponseEntity.status(200).body(rentalPrice);
-        }
-
-    /// reemas
-    @PutMapping("/update-rental-Status")
-        public ResponseEntity updateRentalStatus(){
-            rentalService.updateRentalStatus();
-        return ResponseEntity.status(200).body(new ApiResponse("Rental status method is running"));
-
-        }
-    /// reemas
-        @GetMapping("/get-ByPrice-Status/{rentalId}/{price}/{status}")
-        public  ResponseEntity getRentalByPriceAndStatus(@PathVariable Integer rentalId, @PathVariable Double price,@PathVariable String status){
-        return  ResponseEntity.status(200).body(rentalService.getRentalByPriceAndStatus(rentalId, price, status));
+    // Services
+    // Reemas - Endpoint used to calculate the total price of renting a heavy equipment by hour
+    @PostMapping("/calculate-rental-price/{rentalStartDate}/{rentalEndDate}/{price}")
+    public ResponseEntity calculateRentalPrice(@PathVariable LocalDateTime rentalStartDate,@PathVariable LocalDateTime rentalEndDate,@PathVariable Double price){
+        Double rentalPrice = rentalService.calculateRentalPrice(rentalStartDate, rentalEndDate,price );
+        return ResponseEntity.status(200).body(rentalPrice);
     }
 
+    // Reemas - Endpoint runs every 10 minutes to check and update all rentals status
+    @PutMapping("/update-rental-Status")
+    public ResponseEntity updateRentalStatus(){
+        rentalService.updateRentalStatus();
+        return ResponseEntity.status(200).body(new ApiResponse("Rental status method is running"));
+
+    }
+    // Reemas - Endpoint returns list of rentals by price and status
+    @GetMapping("/get-ByPrice-Status/{rentalId}/{price}/{status}")
+    public  ResponseEntity getRentalByPriceAndStatus(@PathVariable Integer rentalId, @PathVariable Double price,@PathVariable String status){
+        return  ResponseEntity.status(200).body(rentalService.getRentalByPriceAndStatus(rentalId, price, status));
+    }
 }

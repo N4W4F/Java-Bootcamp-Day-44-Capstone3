@@ -12,6 +12,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+// Reemas - Rental Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -42,17 +43,11 @@ public class Rental {
           message = "Rental Status must be either 'Active', 'Cancelled, or 'Completed'")
   private String status = "Active";
 
-  //
+  // Relations
   @ManyToOne
   @JsonIgnore
   private Customer customer;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "rental")
   private Set<HeavyEquipment> heavyEquipments;
-
-//  @PrePersist
-//  public void prePersist() {
-//    if (startDateTime == null)
-//      startDateTime = LocalDateTime.now();
-//  }
 }

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// Ebtehal - Plant Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -30,7 +31,7 @@ public class Plant {
     @Positive(message = "Plant Quantity must be positive number")
     private Integer quantity;
 
-    //
+    // Relations
     @ManyToOne
     @JsonIgnore
     private Farm farm;

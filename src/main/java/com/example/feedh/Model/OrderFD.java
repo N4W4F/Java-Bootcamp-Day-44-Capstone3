@@ -12,6 +12,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+// Reemas - OrderFD Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -44,17 +45,11 @@ public class OrderFD {
     @Pattern(regexp = "^(Completed|Canceled)")
     private String status = "Completed";
 
-    //
+    // Relations
     @ManyToOne
     @JsonIgnore
     private Customer customer;
 
     @OneToMany(cascade = CascadeType.ALL ,mappedBy = "orderFD")
     private Set<Product> products;
-
-//    @PrePersist
-//    public void prePersist() {
-//        if (orderDateTime == null)
-//            orderDateTime = LocalDateTime.now();
-//    }
 }

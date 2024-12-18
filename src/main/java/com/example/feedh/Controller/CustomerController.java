@@ -39,6 +39,4 @@ public class CustomerController {
         return ResponseEntity.status(200).body(new ApiResponse("Customer with ID: " + customerId + " has been deleted successfully"));
     }
     // CRUD - End
-
-    // Services
 }

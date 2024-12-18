@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// Nawaf - EventParticipant Repository
 @Repository
 public interface EventParticipantRepository extends JpaRepository<EventParticipant, Integer> {
     EventParticipant findEventParticipantById(Integer id);

@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.util.Set;
 
+// Reemas - Customer Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -58,14 +59,13 @@ public class Customer {
     @Pattern(regexp = "^\\d{6}$", message = "Customer Agricultural Register must be exactly 6 digits")
     private String agriculturalRegister;
 
-
     @Column(columnDefinition = "varchar(30) not null")
     @NotEmpty(message = "Customer Agricultural Register Status cannot be empty")
     @Pattern(regexp = "^(Active|Expired)$",
             message = "Customer Agricultural Register Status must be either 'Active' or 'Expired'")
     private String registerStatus;
 
-    //
+    // Relations
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private Set<Farm> farms;
 

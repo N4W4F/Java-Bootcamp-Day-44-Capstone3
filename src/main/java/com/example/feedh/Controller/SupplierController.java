@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/v1/supplier")
 public class SupplierController {
     private final SupplierService supplierService;
-
+    // CRUD - Start
     @GetMapping("/get")
     public ResponseEntity getAllSuppliers() {
         return ResponseEntity.status(200).body(supplierService.getAllSuppliers());
@@ -40,8 +40,9 @@ public class SupplierController {
         supplierService.deleteSupplier(supplierId);
         return ResponseEntity.status(200).body(new ApiResponse("Supplier with ID: " + supplierId + " has been deleted successfully"));
     }
+    // CRUD - End
 
-    // Ebtehal: Sending email
+    // Ebtehal - Endpoint sends emails to all rental customers whose their rentals expires soon (3 days or less)
     @GetMapping("/get/email")
     public ResponseEntity getRentalsNearExpiration() {
         return ResponseEntity.status(200).body(supplierService.getRentalsNearExpiration());

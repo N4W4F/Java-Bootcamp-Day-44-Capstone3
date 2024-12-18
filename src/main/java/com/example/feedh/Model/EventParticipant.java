@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import java.util.Set;
 
+// Nawaf - EventParticipant Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,14 +23,13 @@ public class EventParticipant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // الـ Status مو عاجبتني
     @Column(columnDefinition = "VARCHAR(50) DEFAULT ('Pending')")
     @Size(min = 1, max = 50, message = "Event Participant Status must be between 1 and 50 characters")
     @Pattern(regexp = "^(Pending|Accepted|Rejected)$",
             message = "Event Participant Status must be either 'Pending', 'Accepted', or 'Rejected'")
     private String status = "Pending";
 
-    //
+    // Relations
     @ManyToOne
     @JsonIgnore
     private Event event;

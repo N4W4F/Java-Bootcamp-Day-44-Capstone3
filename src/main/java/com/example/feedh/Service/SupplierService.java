@@ -19,13 +19,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+// Ebtehal - Supplier Service
 @Service
 @RequiredArgsConstructor
 public class SupplierService {
     private final SupplierRepository supplierRepository;
     private final RentalRepository rentalRepository;
     private final JavaMailSender mailSender;
-   private final CustomerRepository customerRepository;
     // CRUD - Start
     public List<SupplierDTOout> getAllSuppliers() {
         List<Supplier> suppliers = supplierRepository.findAll();
@@ -79,8 +79,7 @@ public class SupplierService {
     }
     // CRUD - End
 
-    // Getters
-
+    // Services
     //Eb
     public List<Supplier>getSupplierByAddress(String address){
             List<Supplier>suppliers=supplierRepository.findSupplierByAddress(address);
@@ -90,8 +89,8 @@ public class SupplierService {
         return suppliers;
     }
 
-    //eb
-        public List<Rental> getRentalsNearExpiration() {
+    //Ebtehal
+    public List<Rental> getRentalsNearExpiration() {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime nearEndDate = today.plusDays(3);
 
@@ -106,8 +105,8 @@ public class SupplierService {
         return rentalsNearExpiration;
     }
 
-//eb
-//     إرسال بريد إلكتروني للعميل
+    // Ebtehal
+    //     إرسال بريد إلكتروني للعميل
     private void sendEmailNotification(String email, Rental rental) {
         String subject = "Rental Contract Expiration Notice";
         String message = "Dear Customer,\n\n"
@@ -125,12 +124,7 @@ public class SupplierService {
         mailSender.send(mailMessage);
     }
 
-    // Services
-
-    // compare between supplier
-
     //Ebtehal
-
     // get Supplier by ProductPrice
     public List<DTOoutSUP> getSuppliersByProductPrice(Double price) {
         List<Supplier> suppliers = supplierRepository.findSuppliersByProductPrice(price);
@@ -147,8 +141,8 @@ public class SupplierService {
         return dtoList;
     }
 
-    // get Supplier by heavyEquepment Price
     //Ebtehal
+    // get Supplier by heavyEquepment Price
     public List<DTOoutSUP> getSuppliersByHeavyEquipmentRentPrice(Double price) {
         List<Supplier> suppliers = supplierRepository.findSuppliersByHeavyEquipmentRentPrice(price);
         List<DTOoutSUP> dtoList = new ArrayList<>();
@@ -163,7 +157,4 @@ public class SupplierService {
         }
         return dtoList;
     }
-
-
-
 }

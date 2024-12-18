@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+// Nawaf - EventParticipant Service
 @Service
 @RequiredArgsConstructor
 public class EventParticipantService {
@@ -27,7 +28,6 @@ public class EventParticipantService {
         List<EventParticipantDTOout> participantDTOS = new ArrayList<>();
 
         for (EventParticipant participant : participants) {
-            // Map Customer to CustomerDTO
             CustomerDTOout customerDTOout = new CustomerDTOout(
                     participant.getCustomer().getName(),
                     participant.getCustomer().getEmail(),
@@ -38,7 +38,6 @@ public class EventParticipantService {
                     null  // Assuming rentals aren't needed for this response
             );
 
-            // Map Event to EventDTO
             EventDTOout eventDTOout = new EventDTOout(
                     participant.getEvent().getName(),
                     participant.getEvent().getDescription(),
@@ -48,14 +47,12 @@ public class EventParticipantService {
                     participant.getEvent().getStatus()
             );
 
-            // Add to the DTO list
             participantDTOS.add(new EventParticipantDTOout(
                     participant.getStatus(),
                     customerDTOout,
                     eventDTOout
             ));
         }
-
         return participantDTOS;
     }
 
@@ -76,15 +73,21 @@ public class EventParticipantService {
     }
 
 
-    public void updateEventParticipant(Integer eventParticipantId, EventParticipant eventParticipant) {
+    public void updateEventParticipant(Integer eventParticipantId, Integer adminId, EventParticipant eventParticipant) {
+        Admin admin = adminRepository.findAdminById(adminId);
+        if (admin == null) {
+            throw new ApiException("You don't have permission to update an event participant");
+        }
+
         EventParticipant oldEventParticipant = eventParticipantRepository.findEventParticipantById(eventParticipantId);
         if (oldEventParticipant == null) {
             throw new ApiException("Event Participant with ID: " + eventParticipantId + " was not found");
         }
         oldEventParticipant.setStatus(eventParticipant.getStatus());
+        eventParticipantRepository.save(oldEventParticipant);
     }
 
-    public void deleteEventParticipant(Integer adminId, Integer eventParticipantId) {
+    public void deleteEventParticipant(Integer eventParticipantId, Integer adminId) {
         Admin admin = adminRepository.findAdminById(adminId);
         if (admin == null) {
             throw new ApiException("You don't have permission to delete an event participant");
@@ -97,8 +100,4 @@ public class EventParticipantService {
         eventParticipantRepository.delete(eventParticipant);
     }
     // CRUD - End
-
-    // Getters
-
-    // Services
 }

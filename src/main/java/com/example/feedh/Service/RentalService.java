@@ -14,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+// Reemas - Rental Service
 @Service
 @RequiredArgsConstructor
 public class RentalService {
@@ -63,40 +64,41 @@ public class RentalService {
 //        rental.setPrice(calculateRentalPrice(rental.getStartDateTime(), rental.getEndDateTime(), newPrice));
 //        rentalRepository.save(rental);
 //    }
-public void addRental(Integer customerId, Integer farmerId, Integer heavyEquipmentId, Rental rental) {
+    public void addRental(Integer customerId, Integer farmerId, Integer heavyEquipmentId, Rental rental) {
 
-    Customer customer = customerRepository.findCustomerById(customerId);
-    if (customer == null) {
-        throw new ApiException("Customer with ID: " + customerId + " was not found");
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            throw new ApiException("Customer with ID: " + customerId + " was not found");
+        }
+
+        Farmer farmer = farmerRepository.findFarmerById(farmerId);
+        if (farmer == null) {
+            throw new ApiException("Farmer with ID: " + farmerId + " was not found");
+        }
+        if (!farmer.getVisaType().equalsIgnoreCase("Shepherd")) {
+            throw new ApiException("Sorry but the farmer must have Shepherd visa to use the Heavy Equipment");
+        }
+
+        HeavyEquipment heavy = heavyEquipmentRepository.findHeavyEquipmentById(heavyEquipmentId);
+        if (heavy == null) {
+            throw new ApiException("The Heavy Equipment with ID: " + heavyEquipmentId + " was not found");
+        }
+        if (heavy.getStatus().equalsIgnoreCase("Rented")) {
+            throw new ApiException("Sorry but the Heavy Equipment is not Available");
+        }
+
+        heavy.setStatus("Rented");
+        heavyEquipmentRepository.save(heavy);
+
+        rental.setPrice(calculateRentalPrice(rental.getStartDateTime(),rental.getEndDateTime(),heavy.getPricePerHour()) + heavy.getInsurance());
+        rental.setCustomer(customer);
+        rentalRepository.save(rental);
+
+        // Send Email with equipment details and price
+        sendRentalConfirmationEmail(customer, heavy,rental);
     }
 
-    Farmer farmer = farmerRepository.findFarmerById(farmerId);
-    if (farmer == null) {
-        throw new ApiException("Farmer with ID: " + farmerId + " was not found");
-    }
-    if (!farmer.getVisaType().equalsIgnoreCase("Shepherd")) {
-        throw new ApiException("Sorry but the farmer must have Shepherd visa to use the Heavy Equipment");
-    }
-
-    HeavyEquipment heavy = heavyEquipmentRepository.findHeavyEquipmentById(heavyEquipmentId);
-    if (heavy == null) {
-        throw new ApiException("The Heavy Equipment with ID: " + heavyEquipmentId + " was not found");
-    }
-    if (heavy.getStatus().equalsIgnoreCase("Rented")) {
-        throw new ApiException("Sorry but the Heavy Equipment is not Available");
-    }
-
-    heavy.setStatus("Rented");
-    heavyEquipmentRepository.save(heavy);
-
-    rental.setPrice(calculateRentalPrice(rental.getStartDateTime(),rental.getEndDateTime(),heavy.getPricePerHour()) + heavy.getInsurance());
-    rental.setCustomer(customer);
-    rentalRepository.save(rental);
-
-    // Send Email with equipment details and price
-    sendRentalConfirmationEmail(customer, heavy,rental);
-}
-
+    // Reemas - Notification method used in 'addRental' to notify a customer then they rent a heavy equipment
     private void sendRentalConfirmationEmail(Customer customer,HeavyEquipment heavy, Rental rental) {
         String userEmail = customer.getEmail();
         String subject = "Rental Confirmation: " + heavy.getName();
@@ -126,11 +128,8 @@ public void addRental(Integer customerId, Integer farmerId, Integer heavyEquipme
         oldRental.setStatus(rental.getStatus());
         rentalRepository.save(oldRental);
     }
-
-
     // CRUD - End
 
-    // Getters
 
     // Services
     /// //2 calculateRentalPrice

@@ -5,7 +5,6 @@ import com.example.feedh.DTOout.LiveStockDTOout;
 import com.example.feedh.Model.Customer;
 import com.example.feedh.Model.Farm;
 import com.example.feedh.Model.LiveStock;
-import com.example.feedh.Model.Plant;
 import com.example.feedh.Repository.CustomerRepository;
 import com.example.feedh.Repository.FarmRepository;
 import com.example.feedh.Repository.LiveStockRepository;
@@ -17,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Ebtehal - LiveStock Service
 @Service
 @RequiredArgsConstructor
 public class LiveStockService {
@@ -65,7 +65,7 @@ public class LiveStockService {
     }
     // CRUD - End
 
-    // Getters
+    // Services
     public LiveStockDTOout getLiveStockById(Integer liveStockId) {
         LiveStock liveStock = liveStockRepository.findLiveStockById(liveStockId);
         if (liveStock == null) {
@@ -174,7 +174,6 @@ public class LiveStockService {
         throw new ApiException("You don't own a farm with this ID: " + farmId);
     }
 
-    // Services
     /// // 4 reemas
     public Map<String,List<String>>  getFeedSuggestions(String type) {
         Map<String,List<String>> feedTypesByType = new HashMap<>();

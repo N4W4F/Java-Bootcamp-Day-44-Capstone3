@@ -42,43 +42,47 @@ public class LiveStockController {
     }
     // CRUD - End
 
-    // Getters
+    // Services
+    // Nawaf - Endpoint returns a livestock by ID
     @GetMapping("/get/by-id/{liveStockId}")
     public ResponseEntity getLiveStockById(@PathVariable Integer liveStockId) {
         return ResponseEntity.status(200).body(liveStockService.getLiveStockById(liveStockId));
     }
 
+    // Nawaf - Endpoint returns a list of livestock by type in specific farm belongs to a specific customer
     @GetMapping("/get/by-type/{customerId}/{farmId}/{type}")
     public ResponseEntity getLiveStockByType(@PathVariable Integer customerId, @PathVariable Integer farmId, @PathVariable String type) {
         return ResponseEntity.status(200).body(liveStockService.getLiveStockByType(customerId, farmId, type));
     }
 
+    // Nawaf - Endpoint returns a list of livestock by breed in specific farm belongs to a specific customer
     @GetMapping("/get/by-breed/{customerId}/{farmId}/{breed}")
     public ResponseEntity getLiveStockByBreed(@PathVariable Integer customerId, @PathVariable Integer farmId, @PathVariable String breed) {
         return ResponseEntity.status(200).body(liveStockService.getLiveStockByBreed(customerId, farmId, breed));
     }
 
+    // Nawaf - Endpoint returns a list of livestock by more-than quantity in specific farm belongs to a specific customer
     @GetMapping("/get/by-quantity/more-than/{customerId}/{farmId}/{quantity}")
     public ResponseEntity getLiveStockByQuantityGreaterThan(@PathVariable Integer customerId, @PathVariable Integer farmId, @PathVariable Integer quantity) {
         return ResponseEntity.status(200).body(liveStockService.getLiveStockByQuantityGreaterThanEqual(customerId, farmId, quantity));
     }
 
+    // Nawaf - Endpoint returns a list of livestock by less-than quantity in specific farm belongs to a specific customer
     @GetMapping("/get/by-quantity/less-than/{customerId}/{farmId}/{quantity}")
     public ResponseEntity getLiveStockByQuantityLessThan(@PathVariable Integer customerId, @PathVariable Integer farmId, @PathVariable Integer quantity) {
         return ResponseEntity.status(200).body(liveStockService.getLiveStockByQuantityLessThanEqual(customerId, farmId, quantity));
     }
 
-    // Services
-    /// reemas
+    // Reemas - Endpoint suggests a food type based on given livestock type
     @GetMapping("/get/feed-suggestions/{type}")
-   public ResponseEntity<Map<String, List<String>>> getFeedSuggestions(@PathVariable String type) {
+    public ResponseEntity<Map<String, List<String>>> getFeedSuggestions(@PathVariable String type) {
         Map<String, List<String>> feedSuggestions = liveStockService.getFeedSuggestions(type);
-       return ResponseEntity.status(200).body(feedSuggestions);
+        return ResponseEntity.status(200).body(feedSuggestions);
     }
-    /// reemas
-    @GetMapping("/get-LiveStock-BY-BreedAndType/{breed}/{type}")
+
+    // Reemas - Endpoint returns a list of livestock by type and breed
+    @GetMapping("/get/by-breed/{breed}/type/{type}")
     public ResponseEntity getLiveStockByBreedAndType(@PathVariable String breed,@PathVariable String type ){
         return ResponseEntity.status(200).body(liveStockService.getLiveStockByBreedAndType(breed, type));
     }
-
 }

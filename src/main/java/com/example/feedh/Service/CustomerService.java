@@ -16,6 +16,7 @@ import java.util.List;
 public class CustomerService {
     private final CustomerRepository customerRepository;
 
+    // CRUD - Start
     public List<CustomerDTOout> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
         List<CustomerDTOout> customerDTOS = new ArrayList<>();
@@ -58,11 +59,11 @@ public class CustomerService {
 
     public void addCustomer(Customer customer) {
         if(!customer.getFoundationFile()){
-            throw new ApiException(" if you don't have you Foundation File you can't register ");
-
+            throw new ApiException("You cannot register if you don't own a foundation register");
         }
         customerRepository.save(customer);
     }
+
     public void updateCustomer(Integer customerId, Customer customer) {
         Customer oldCustomer = customerRepository.findCustomerById(customerId);
         if (oldCustomer == null) {

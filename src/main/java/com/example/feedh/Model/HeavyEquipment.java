@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// Ebtehal - HeavyEquipment Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -40,7 +41,7 @@ public class HeavyEquipment {
             message = "Heavy Equipment Status must be either 'Available' or 'Rented'")
     private String status = "Active";
 
-    //
+    // Relations
     @ManyToOne
     @JsonIgnore
     private Rental rental;

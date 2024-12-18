@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// Ebtehal - HeavyEquipment Repository
 @Repository
 public interface HeavyEquipmentRepository extends JpaRepository<HeavyEquipment, Integer> {
     HeavyEquipment findHeavyEquipmentById(Integer id);

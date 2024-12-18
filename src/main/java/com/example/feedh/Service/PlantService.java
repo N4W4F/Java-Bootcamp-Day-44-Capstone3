@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// Ebtehal - Plant Service
 @Service
 @RequiredArgsConstructor
 public class PlantService {
@@ -65,8 +66,6 @@ public class PlantService {
         plantRepository.delete(plant);
     }
     // CRUD - End
-    
-    // Getters
 
     // Services
     /// Ebtehal

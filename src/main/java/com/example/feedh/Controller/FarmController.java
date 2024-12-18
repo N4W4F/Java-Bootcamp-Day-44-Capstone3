@@ -16,13 +16,13 @@ import java.util.List;
 @RequestMapping("/api/v1/farm")
 public class FarmController {
     private final FarmService farmService;
-
+    // CRUD - Start
     @GetMapping("/get")
     public ResponseEntity getAllFarms() {
         return ResponseEntity.status(200).body(farmService.getAllFarms());
     }
 
-    @PostMapping("/add-farm/{ownerId}")
+    @PostMapping("/add/{ownerId}")
     public ResponseEntity addFarm(@PathVariable Integer ownerId, @RequestBody @Valid Farm farm) {
         farmService.addFarm(ownerId, farm);
         return ResponseEntity.status(200).body(new ApiResponse("Farm has been added successfully"));
@@ -39,13 +39,25 @@ public class FarmController {
         farmService.deleteFarm(ownerId, farmId);
         return ResponseEntity.status(200).body(new ApiResponse("Farm with ID: " + farmId + " has been deleted successfully"));
     }
+    // CRUD - End
 
-/// reemas
-@GetMapping("/FarmByLocation/{customerId}/{farmId}/{location}")
-    public ResponseEntity getFarmByLocation(@PathVariable Integer customerId,@PathVariable Integer farmId ,@PathVariable String location){
-        List<Farm>farms=farmService.getFarmByLocation(customerId, farmId, location);
-        return ResponseEntity.status(200).body(farms);
-
+    // Services
+    // Reemas - Endpoint returns a list of farms belongs to a customer in specific location
+    @GetMapping("/get/by-customer/{customerId}/farm/{farmId}/location/{location}")
+        public ResponseEntity getFarmByLocation(@PathVariable Integer customerId,@PathVariable Integer farmId ,@PathVariable String location){
+            List<Farm>farms=farmService.getFarmByLocation(customerId, farmId, location);
+            return ResponseEntity.status(200).body(farms);
     }
 
+    // Nawaf - Endpoint returns a list of farms belongs to a customer
+    @GetMapping("/get/by-customer/{customerId}")
+    public ResponseEntity getFarmByCustomer(@PathVariable Integer customerId) {
+        return ResponseEntity.status(200).body(farmService.getFarmByCustomer(customerId));
+    }
+
+    // Nawaf - Endpoint returns a list of farms belongs to a customer in specific type
+    @GetMapping("/get/by-customer/{customerId}/type/{type}")
+    public ResponseEntity getFarmByCustomerAndType(@PathVariable Integer customerId, @PathVariable String type) {
+        return ResponseEntity.status(200).body(farmService.getFarmByCustomerAndType(customerId, type));
+    }
 }

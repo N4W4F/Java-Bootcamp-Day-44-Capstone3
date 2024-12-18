@@ -1,13 +1,12 @@
 package com.example.feedh.DTOout;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+// Reemas - Rental DTO Out
+@Data
 @AllArgsConstructor
 public class RentalDTOout {
     private LocalDateTime startDateTime;

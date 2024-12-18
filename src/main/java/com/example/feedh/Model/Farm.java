@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.util.Set;
 
+// Nawaf - Farm Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -43,7 +44,7 @@ public class Farm {
             message = "Farm Type must be either 'Agricultural', 'Livestock', or 'Mixed'")
     private String type;
 
-    //
+    // Relations
     @ManyToOne
     @JsonIgnore
     private Customer customer;

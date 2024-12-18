@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// Nawaf - Farmer Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -50,7 +51,7 @@ public class Farmer {
             message = "Farmer Visa type must be either 'Farmer' or 'Shepherd'")
     private String visaType;
 
-    //
+    // Relations
     @ManyToOne
     @JsonIgnore
     private Customer customer;

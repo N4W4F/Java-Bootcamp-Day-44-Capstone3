@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/event-participant")
 public class EventParticipantController {
     private final EventParticipantService eventParticipantService;
-    // CRUD -
+    // CRUD - Start
     @GetMapping("/get")
     public ResponseEntity getAllEventParticipants() {
         return ResponseEntity.status(200).body(eventParticipantService.getAllEventParticipants());
@@ -26,15 +26,16 @@ public class EventParticipantController {
         return ResponseEntity.status(200).body(new ApiResponse("Event Participant has been added to event: " + eventId + " successfully"));
     }
 
-    @PutMapping("/update/{adminId}/{eventParticipantId}")
-    public ResponseEntity updateEventParticipant(@PathVariable Integer eventParticipantId, @RequestBody @Valid EventParticipant eventParticipant) {
-        eventParticipantService.updateEventParticipant(eventParticipantId, eventParticipant);
+    @PutMapping("/update/{eventParticipantId}/{adminId}")
+    public ResponseEntity updateEventParticipant(@PathVariable Integer eventParticipantId, @PathVariable Integer adminId,  @RequestBody @Valid EventParticipant eventParticipant) {
+        eventParticipantService.updateEventParticipant(eventParticipantId, adminId, eventParticipant);
         return ResponseEntity.status(200).body(new ApiResponse("Event Participant with ID: " + eventParticipantId + " has been updated successfully"));
     }
 
-    @DeleteMapping("/delete/{adminId}/{eventParticipantId}")
-    public ResponseEntity deleteEventParticipant(@PathVariable Integer adminId, @PathVariable Integer eventParticipantId) {
-        eventParticipantService.deleteEventParticipant(adminId, eventParticipantId);
+    @DeleteMapping("/delete/{eventParticipantId}/{adminId}")
+    public ResponseEntity deleteEventParticipant(@PathVariable Integer eventParticipantId, @PathVariable Integer adminId) {
+        eventParticipantService.deleteEventParticipant(eventParticipantId, adminId);
         return ResponseEntity.status(200).body(new ApiResponse("Event with ID: " + eventParticipantId + " has been deleted successfully"));
     }
+    // CRUD - End
 }

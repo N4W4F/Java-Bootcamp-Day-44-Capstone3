@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// Reemas - Product Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -45,7 +46,7 @@ public class Product {
     @PositiveOrZero(message = "Product Quantity must be valid number")
     private Integer quantity;
 
-    //
+    // Relations
     @ManyToOne
     @JsonIgnore
     private OrderFD orderFD;

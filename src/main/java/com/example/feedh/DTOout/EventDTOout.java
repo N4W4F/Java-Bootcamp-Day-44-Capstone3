@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-// Nawaf - Event DTO
+// Nawaf - Event DTO Out
 @Data
 @AllArgsConstructor
 public class EventDTOout {

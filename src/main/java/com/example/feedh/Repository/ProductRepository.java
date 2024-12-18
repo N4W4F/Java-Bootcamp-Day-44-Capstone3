@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// Reemas - Product Repository
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     Product findProductById(Integer id);

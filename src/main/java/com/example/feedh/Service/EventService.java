@@ -62,11 +62,14 @@ public class EventService {
         eventRepository.save(oldEvent);
     }
 
-    public void deleteEvent(Integer adminId ,Integer eventId) {
-        Admin admin=adminRepository.findAdminById(adminId);
+    public void deleteEvent(Integer eventId, Integer adminId) {
+        Admin admin = adminRepository.findAdminById(adminId);
+        if (admin == null) {
+            throw new ApiException("You don't have the permission to delete an event");
+        }
         Event event = eventRepository.findEventById(eventId);
-        if (event == null||admin==null) {
-            throw new ApiException("event not found");
+        if (event == null) {
+            throw new ApiException("Event with ID: " + eventId + " was not found");
         }
         eventRepository.delete(event);
     }
@@ -93,7 +96,6 @@ public class EventService {
             throw new ApiException("Sorry look like there’s no event like this details");
         }
         return eventList;
-
     }
 
     public List<Event>findEventByStatusAndLocation(String status,String location ){
@@ -104,6 +106,7 @@ public class EventService {
        return  eventList;
     }
 
+    // Nawaf - Notification method used to notify all customers when an admin creates a new event
     private void notifyCustomersAboutEvent(Event event) {
         List<Customer> customers = customerRepository.findAll();
 

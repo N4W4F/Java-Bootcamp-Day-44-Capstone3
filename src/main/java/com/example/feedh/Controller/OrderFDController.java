@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/order")
 public class OrderFDController {
     private final OrderFDService orderFDService;
+    // CRUD - Start
 /// reemas
     @GetMapping("/get")
     public ResponseEntity getAllOrders() {
@@ -40,7 +41,6 @@ public class OrderFDController {
     // CRUD - End
 
     // Services
-
     // Nawaf - Endpoint returns the order history for a specific customer by their ID
     @GetMapping("/get/history/{customerId}")
     public ResponseEntity getOrderHistoryByCustomer(@PathVariable Integer customerId) {

@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.Set;
 
+// Ebtehal - Supplier Model
 @Getter
 @Setter
 @AllArgsConstructor
@@ -57,7 +58,7 @@ public class Supplier {
     @Pattern(regexp = "\\d{10}", message = "Supplier Company Register Number must contain exactly 10 digits")
     private String companyRegister;
 
-    //
+    // Relations
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier")
     private Set<Product> products;
 

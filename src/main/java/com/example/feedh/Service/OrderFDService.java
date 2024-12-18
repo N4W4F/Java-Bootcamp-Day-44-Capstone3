@@ -3,7 +3,6 @@ package com.example.feedh.Service;
 import com.example.feedh.ApiResponse.ApiException;
 import com.example.feedh.DTOout.OrderFDDTOout;
 import com.example.feedh.DTOout.ProductDTOout;
-import com.example.feedh.Model.Admin;
 import com.example.feedh.Model.Customer;
 import com.example.feedh.Model.OrderFD;
 import com.example.feedh.Model.Product;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+// Reemas - OrderFD Service
 @Service
 @RequiredArgsConstructor
 public class OrderFDService {
@@ -72,9 +72,8 @@ public class OrderFDService {
     }
     // CRUD - End
 
-    // Getter
-
     // Services
+    // Reemas - Nawaf: Helper method used in 'addOrder' to check the average of customer's orders, and detects if an item bought with more amount than average, then sends an email!
     public Double checkAverageOrders(Integer customerId) {
         Customer customer = customerRepository.findCustomerById(customerId);
         if (customer == null) {
@@ -109,10 +108,11 @@ public class OrderFDService {
         return orderFDDTOS;
     }
 
+    // Reemas - Helper method used to send an email
     private void sendNotification(Customer customer) {
         String userEmail = customer.getEmail();
         String subject = "Notice of Unusual Purchase Activity on Your Account";
-        String body = "Dear [Customer Name],\n" +
+        String body = "Dear " + customer.getName() + ",\n" +
                 "\n" +
                 "We hope this message finds you well.\n" +
                 "\n" +
