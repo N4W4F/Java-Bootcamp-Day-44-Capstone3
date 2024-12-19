@@ -1,12 +1,12 @@
-// Nawaf -Custpmer Controller,ServiceModel,repository
+// Customer: Controller, Service, Model, Repository, DTO
 
-// Nawaf - Farm Controller,ServiceModel,repository
+// Farm:  Controller, Service, Model, Repository, DTO
 
-// Nawaf - Farmer Controller,ServiceModel,repository
+// Farmer: Controller, Service, Model, Repository, DTO
 
-// Nawaf - Prudect Controller,ServiceModel,repository
+// Prudect: Controller, Service, Model, Repository, DTO
 
-// Nawaf - OrderFD Controller,ServiceModel,repository
+// OrderFD: Controller, Service, Model, Repository, DTO
 
 ,,,,,,,,,,,,,,,,,,,,,,,,
 
